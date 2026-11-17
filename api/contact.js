@@ -39,7 +39,7 @@ export default async function handler(req, res) {
   const key=sign(phone.replace(/\D/g,''),secret);
   if(recent.has(key)) return res.status(429).json({error:'Заявка уже обрабатывается. Попробуйте через минуту.'});
   recent.set(key,now);
-  const text=['Новая заявка с сайта',`Услуга: ${service}`,`Имя: ${name}`,`Телефон: ${phone}`,`Выставленная стоимость: ${amount||'не указана'}`,`Ситуация: ${message||'не описана'}`,'Согласие на обработку данных: дано',`Дата: ${new Date().toISOString()}`].join('\n');
+  const text=['⚡ Новая заявка — Энергетика',`Услуга: ${service}`,`Имя: ${name}`,`Телефон: ${phone}`,`Выставленная стоимость: ${amount||'не указана'}`,`Ситуация: ${message||'не описана'}`,'Согласие на обработку данных: дано',`Дата: ${new Date().toISOString()}`].join('\n');
   try {
     const response=await fetch(`https://api.telegram.org/bot${secret}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:chatId,text,link_preview_options:{is_disabled:true}}),signal:AbortSignal.timeout(10000)});
     const result=await response.json();
